@@ -124,4 +124,4 @@ void verificarResposta() {
     else{
         digitalWrite(ledERRO, HIGH);
     }
-}
+} 
