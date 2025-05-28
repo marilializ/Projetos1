@@ -1,12 +1,12 @@
 #include <Arduino.h>
 
-const int ledAzul = 5;
-const int ledAmarelo = 6;
-const int ledVermelho = 7;
+const int ledAzul = 50;
+const int ledAmarelo = 51;
+const int ledVermelho = 52;
 
-const int botaoAzul = 8;
-const int botaoAmarelo = 9;
-const int botaoVermelho = 10;
+const int botaoAzul = 22;
+const int botaoAmarelo = 23;
+const int botaoVermelho = 24;
 
 const int ledOK = 3;
 const int ledERRO = 2;
@@ -16,6 +16,7 @@ int sequencia[tamanhoSequencia];
 int resposta[tamanhoSequencia];
 int posicao = 0;
 bool jacerto = false;
+int cont = 0;
 
 
 void setup()
@@ -32,7 +33,7 @@ void setup()
     pinMode(ledERRO, OUTPUT);
     digitalWrite(ledOK, HIGH);
     digitalWrite(ledERRO, HIGH);
-    Serial.begin(2000);
+    Serial.begin(9600);
     digitalWrite(ledOK, LOW);
     digitalWrite(ledERRO, LOW);
 
@@ -46,6 +47,7 @@ void setup()
 }
 
 void loop() {
+cont = 1;
 if (posicao < tamanhoSequencia) {
     int escolha = lerbotao();
 
@@ -54,11 +56,6 @@ if (posicao < tamanhoSequencia) {
         mostrarLED(escolha);
         posicao++;
 
-        while (lerbotao() != 0) {
-         delay(10);
-        }
-
-        delay(500);
     }
 }else if (!jacerto) {
     verificarResposta();
@@ -67,10 +64,15 @@ if (posicao < tamanhoSequencia) {
 }
 
 int lerbotao() {
-    if (digitalRead(botaoAzul) == LOW) return 1;
-    if (digitalRead(botaoAmarelo) == LOW) return 2;
-    if (digitalRead(botaoVermelho) == LOW) return 3;
-    return 0;
+    if (digitalRead(botaoAzul) == LOW){ 
+      return 1;
+    }else if (digitalRead(botaoAmarelo) == LOW){ 
+      return 2;
+    }else if (digitalRead(botaoVermelho) == LOW){ 
+      return 3;
+    }else{
+      return 0;
+    }
 }
 
 void mostrarLED(int led)
@@ -88,11 +90,21 @@ void mostrarLED(int led)
     digitalWrite(ledVermelho, HIGH);
   }
 
+  timer = millis();
+
+  if(cont == 0){
     delay(500);
     digitalWrite(ledAzul, LOW);
     digitalWrite(ledAmarelo, LOW);
     digitalWrite(ledVermelho, LOW);
     delay(500);
+  }else if(cont == 1){
+    delay(200);
+    Serial.println("sexo");
+    digitalWrite(ledAzul, LOW);
+    digitalWrite(ledAmarelo, LOW);
+    digitalWrite(ledVermelho, LOW);
+  }
 }
 
 void mostrarSequencia()
@@ -120,8 +132,10 @@ void verificarResposta() {
     if (acerto)
     {
         digitalWrite(ledOK, HIGH);
+        Serial.println("Acerto");
     }
     else{
         digitalWrite(ledERRO, HIGH);
+        Serial.println("Erro");
     }
 } 
