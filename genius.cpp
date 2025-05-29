@@ -1,14 +1,14 @@
 #include <Arduino.h>
 
 // Botões do jogador 1
-const int botaoAzul1 = 22;
-const int botaoAmarelo1 = 23;
-const int botaoVermelho1 = 24;
+const int botaoAzul1 = 2;
+const int botaoAmarelo1 = 3;
+const int botaoVermelho1 = 4;
 
 // Botões do jogador 2
-const int botaoAzul2 = 25;
-const int botaoAmarelo2 = 26;
-const int botaoVermelho2 = 27;
+const int botaoAzul2 = 5;
+const int botaoAmarelo2 = 6;
+const int botaoVermelho2 = 7;
 
 // LEDs de status
 const int ledOK = 3;
@@ -36,6 +36,15 @@ int posicao = 0;
 int jogadorAtual = 0;
 bool esperandoResposta = false;
 
+// Estados anteriores dos botões para evitar múltiplas leituras
+bool botaoAzul1_ant = false;
+bool botaoAmarelo1_ant = false;
+bool botaoVermelho1_ant = false;
+
+bool botaoAzul2_ant = false;
+bool botaoAmarelo2_ant = false;
+bool botaoVermelho2_ant = false;
+
 void setup() {
   Serial.begin(9600);
 
@@ -55,16 +64,7 @@ void setup() {
   digitalWrite(ledOK, LOW);
   digitalWrite(ledERRO, LOW);
 
-  // Sorteio da sequência
-  randomSeed(analogRead(A0));
-  int indice = random(0, 5);
-  for (int i = 0; i < tamanhoSequencia; i++) {
-    sequencia[i] = sequencias[indice][i];
-  }
-
-  Serial.println("=== JOGO DA MEMÓRIA COM 2 JOGADORES ===");
-  mostrarSequencia();
-  iniciarJogador(jogadorAtual);
+  iniciarJogo();
 }
 
 void loop() {
@@ -77,7 +77,6 @@ void loop() {
       Serial.print(" escolheu: ");
       Serial.println(escolha);
       posicao++;
-      delay(200); // debounce simples
     }
   }
 
@@ -93,9 +92,38 @@ void loop() {
       mostrarSequencia();
       iniciarJogador(jogadorAtual);
     } else {
-      mostrarVencedor();
+      // Depois dos dois jogadores jogarem, verifica resultado final
+      if (!acertou[0] && !acertou[1]) {
+        // Se ambos erraram, repete o minigame
+        Serial.println("❌ Ambos erraram a sequência! Repetindo o minigame...");
+        delay(1500);
+        iniciarJogo(); // reinicia o minigame com nova sequência
+      } else {
+        mostrarVencedor();
+        while (true); // trava o jogo após mostrar vencedor
+      }
     }
   }
+}
+
+void iniciarJogo() {
+  // Sorteio da sequência nova
+  randomSeed(analogRead(A0));
+  int indice = random(0, 5);
+  for (int i = 0; i < tamanhoSequencia; i++) {
+    sequencia[i] = sequencias[indice][i];
+  }
+
+  // Reseta variáveis
+  acertou[0] = false;
+  acertou[1] = false;
+  jogadorAtual = 0;
+  posicao = 0;
+  esperandoResposta = false;
+
+  Serial.println("=== JOGO DA MEMÓRIA COM 2 JOGADORES ===");
+  mostrarSequencia();
+  iniciarJogador(jogadorAtual);
 }
 
 void mostrarSequencia() {
@@ -104,7 +132,7 @@ void mostrarSequencia() {
     Serial.print(i + 1);
     Serial.print(": ");
     mostrarCor(sequencia[i]);
-    delay(600); // apenas para facilitar leitura
+    delay(600);
   }
   Serial.println("Agora é a vez do jogador!");
 }
@@ -126,15 +154,39 @@ void iniciarJogador(int jogador) {
 
 int lerBotao(int jogador) {
   if (jogador == 0) {
-    if (digitalRead(botaoAzul1) == LOW) return 1;
-    if (digitalRead(botaoAmarelo1) == LOW) return 2;
-    if (digitalRead(botaoVermelho1) == LOW) return 3;
+    bool azul = (digitalRead(botaoAzul1) == LOW);
+    bool amarelo = (digitalRead(botaoAmarelo1) == LOW);
+    bool vermelho = (digitalRead(botaoVermelho1) == LOW);
+
+    int botaoPressionado = 0;
+
+    if (azul && !botaoAzul1_ant) botaoPressionado = 1;
+    else if (amarelo && !botaoAmarelo1_ant) botaoPressionado = 2;
+    else if (vermelho && !botaoVermelho1_ant) botaoPressionado = 3;
+
+    botaoAzul1_ant = azul;
+    botaoAmarelo1_ant = amarelo;
+    botaoVermelho1_ant = vermelho;
+
+    return botaoPressionado;
+
   } else {
-    if (digitalRead(botaoAzul2) == LOW) return 1;
-    if (digitalRead(botaoAmarelo2) == LOW) return 2;
-    if (digitalRead(botaoVermelho2) == LOW) return 3;
+    bool azul = (digitalRead(botaoAzul2) == LOW);
+    bool amarelo = (digitalRead(botaoAmarelo2) == LOW);
+    bool vermelho = (digitalRead(botaoVermelho2) == LOW);
+
+    int botaoPressionado = 0;
+
+    if (azul && !botaoAzul2_ant) botaoPressionado = 1;
+    else if (amarelo && !botaoAmarelo2_ant) botaoPressionado = 2;
+    else if (vermelho && !botaoVermelho2_ant) botaoPressionado = 3;
+
+    botaoAzul2_ant = azul;
+    botaoAmarelo2_ant = amarelo;
+    botaoVermelho2_ant = vermelho;
+
+    return botaoPressionado;
   }
-  return 0;
 }
 
 void verificarResposta(int jogador) {
@@ -198,6 +250,4 @@ void mostrarVencedor() {
   } else {
     Serial.println("❌ Nenhum jogador acertou a sequência.");
   }
-
-  while (true); // trava o jogo após o resultado
 }
