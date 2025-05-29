@@ -100,7 +100,6 @@ void mostrarLED(int led)
     delay(500);
   }else if(cont == 1){
     delay(200);
-    Serial.println("sexo");
     digitalWrite(ledAzul, LOW);
     digitalWrite(ledAmarelo, LOW);
     digitalWrite(ledVermelho, LOW);
