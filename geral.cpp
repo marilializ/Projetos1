@@ -31,20 +31,23 @@ void setup() {
 }
 
 void loop() {
-  // Espaço para o minigame
-  // Implementar aqui lógica de quem venceu o minigame
-  // Simulação de vencedor (substituir depois):
-  int vencedor = jogarMinigame(); // 1 para Jogador 1, 2 para Jogador 2, 0 para empate
-  
-  if (vencedor == 1 && posicaoJogador1 < NUM_CASAS) {
-    ativarCasa(1, posicaoJogador1);
-    posicaoJogador1++;
-  } else if (vencedor == 2 && posicaoJogador2 < NUM_CASAS) {
-    ativarCasa(2, posicaoJogador2);
-    posicaoJogador2++;
-  }
+  // Executa Minigame 1
+  int vencedor = minigame1();
+  processarVencedor(vencedor);
 
-  delay(2000); // Aguarda antes do próximo minigame
+  delay(2000); // Pequena pausa entre minigames
+
+  // Executa Minigame 2 (espaço para implementar)
+  // int vencedor2 = minigame2();
+  // processarVencedor(vencedor2);
+
+  // delay(2000);
+
+  // Executa Minigame 3 (espaço para implementar)
+  // int vencedor3 = minigame3();
+  // processarVencedor(vencedor3);
+
+  // delay(2000);
 }
 
 // Função para ativar o servo correspondente à casa
@@ -60,17 +63,47 @@ void ativarCasa(int jogador, int casa) {
   }
 }
 
-// Simulação de minigame (substituir por sua lógica real)
-int jogarMinigame() {
-  Serial.println("Minigame em andamento...");
+// Processa o vencedor e atualiza a posição dos jogadores
+void processarVencedor(int vencedor) {
+  if (vencedor == 1 && posicaoJogador1 < NUM_CASAS) {
+    ativarCasa(1, posicaoJogador1);
+    posicaoJogador1++;
+  } else if (vencedor == 2 && posicaoJogador2 < NUM_CASAS) {
+    ativarCasa(2, posicaoJogador2);
+    posicaoJogador2++;
+  } else if (vencedor == 0) {
+    Serial.println("Empate no minigame.");
+  }
+}
 
-  // Aqui você pode implementar seu minigame
-  // Exemplo temporário: escolha aleatória de vencedor
-  int resultado = random(0, 3); // 0: empate, 1: Jogador 1, 2: Jogador 2
+// --- Espaço para implementar o Minigame 1 ---
+int minigame1() {
+  Serial.println("Executando Minigame 1...");
+  // TODO: implementar lógica do minigame aqui
 
-  if (resultado == 1) Serial.println("Jogador 1 venceu o minigame!");
-  else if (resultado == 2) Serial.println("Jogador 2 venceu o minigame!");
-  else Serial.println("Empate!");
+  // Exemplo de resultado aleatório para teste:
+  int resultado = random(0, 3); // 0: empate, 1: jogador1, 2: jogador2
+
+  if (resultado == 0) Serial.println("Minigame 1: Empate!");
+  else Serial.print("Minigame 1: Jogador ");
+  if (resultado != 0) Serial.print(resultado);
+  Serial.println(" venceu!");
 
   return resultado;
+}
+
+// --- Espaço para implementar Minigame 2 ---
+int minigame2() {
+  Serial.println("Executando Minigame 2...");
+  // TODO: implementar lógica do minigame aqui
+
+  return 0; // exemplo: empate
+}
+
+// --- Espaço para implementar Minigame 3 ---
+int minigame3() {
+  Serial.println("Executando Minigame 3...");
+  // TODO: implementar lógica do minigame aqui
+
+  return 0; // exemplo: empate
 }
