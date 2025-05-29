@@ -1,7 +1,6 @@
 #include <SoftwareSerial.h>
 #include <Arduino.h>
 
-
 const int botoes[6] = {2, 3, 4, 5, 6, 7}; // 3 botões por jogador
 
 void setup() {
@@ -12,33 +11,27 @@ void setup() {
   Serial.begin(9600);          // Comunicação com o PC
   Serial.print("Pressione o botão correto!");
   randomSeed(analogRead(A0)); 
-  }
-  
+}
 
-
-void loop() {
+void rodarRodada() {
   // Sorteia qual áudio tocar e quais botões são os corretos
   int escolha = random(0, 3);
   int botao_j1_correto, botao_j2_correto;
 
   if (escolha == 0) {
-  
     botao_j1_correto = 2;
     botao_j2_correto = 5;
-    Serial.println("Jogador 1: 2(botão da esquerda) | Jogador 2: 5(botão da esquerda)");
+    Serial.println("Jogador 1: 2 (esquerda) | Jogador 2: 5 (esquerda)");
   } else if (escolha == 1) {
-  
     botao_j1_correto = 3;
     botao_j2_correto = 6;
-    Serial.println("Jogador 1: 3(botão do meio) | Jogador 2: 6(botão do meio)");
+    Serial.println("Jogador 1: 3 (meio) | Jogador 2: 6 (meio)");
   } else {
-  
     botao_j1_correto = 4;
     botao_j2_correto = 7;
-    Serial.println("Jogador 1: 4(botão da direita) | Jogador 2: 7(botão da direita)");
+    Serial.println("Jogador 1: 4 (direita) | Jogador 2: 7 (direita)");
   }
 
-  // Espera um botão ser pressionado
   int jogador1_botao = -1;
   int jogador2_botao = -1;
   unsigned long tempo_j1 = 0;
@@ -48,13 +41,7 @@ void loop() {
   while (jogador1_botao == -1 || jogador2_botao == -1) {
     for (int i = 0; i < 6; i++) {
       if (digitalRead(botoes[i]) == LOW) {
-        int jogador;
-        if (i < 3) {
-          jogador = 1;
-        } else {
-          jogador = 2;
-        }
-
+        int jogador = (i < 3) ? 1 : 2;
         int pino = botoes[i];
 
         if (jogador == 1 && jogador1_botao == -1) {
@@ -77,20 +64,15 @@ void loop() {
   bool j2_acertou = (jogador2_botao == botao_j2_correto);
 
   if (j1_acertou && !j2_acertou) {
-   
     Serial.println("Jogador 1 venceu!");
   } else if (!j1_acertou && j2_acertou) {
-      
     Serial.println("Jogador 2 venceu!");
   } else if (j1_acertou && j2_acertou) {
     if (tempo_j1 < tempo_j2) {
-
       Serial.println("Ambos acertaram, mas Jogador 1 foi mais rápido!");
     } else if (tempo_j2 < tempo_j1) {
-
       Serial.println("Ambos acertaram, mas Jogador 2 foi mais rápido!");
     } else {
-
       Serial.println("Empate absoluto!");
     }
   } else {
@@ -100,4 +82,8 @@ void loop() {
   }
 
   while (true);  // Fim do jogo
+}
+
+void loop() {
+  rodarRodada();
 }
