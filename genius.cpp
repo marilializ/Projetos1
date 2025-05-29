@@ -1,140 +1,203 @@
 #include <Arduino.h>
 
-const int ledAzul = 50;
-const int ledAmarelo = 51;
-const int ledVermelho = 52;
+// Botões do jogador 1
+const int botaoAzul1 = 22;
+const int botaoAmarelo1 = 23;
+const int botaoVermelho1 = 24;
 
-const int botaoAzul = 22;
-const int botaoAmarelo = 23;
-const int botaoVermelho = 24;
+// Botões do jogador 2
+const int botaoAzul2 = 25;
+const int botaoAmarelo2 = 26;
+const int botaoVermelho2 = 27;
 
+// LEDs de status
 const int ledOK = 3;
 const int ledERRO = 2;
 
 const int tamanhoSequencia = 5;
+
+// Sequências fixas
+int sequencia0[5] = {1, 2, 3, 1, 2};
+int sequencia1[5] = {3, 2, 1, 3, 1};
+int sequencia2[5] = {2, 3, 1, 2, 1};
+int sequencia3[5] = {1, 3, 2, 1, 2};
+int sequencia4[5] = {2, 1, 3, 2, 3};
+
+// Ponteiros para as sequências
+int* sequencias[] = {sequencia0, sequencia1, sequencia2, sequencia3, sequencia4};
 int sequencia[tamanhoSequencia];
-int resposta[tamanhoSequencia];
+
+int resposta[2][tamanhoSequencia]; // Respostas dos dois jogadores
+bool acertou[2] = {false, false};  // Acertou ou não
+unsigned long tempoInicio[2];
+unsigned long tempoFim[2];
+
 int posicao = 0;
-bool jacerto = false;
-int cont = 0;
+int jogadorAtual = 0;
+bool esperandoResposta = false;
 
+void setup() {
+  Serial.begin(9600);
 
-void setup()
-{
-  pinMode(ledAzul, OUTPUT);
-  pinMode(ledAmarelo, OUTPUT);
-  pinMode(ledVermelho, OUTPUT);
+  // Botões jogador 1
+  pinMode(botaoAzul1, INPUT_PULLUP);
+  pinMode(botaoAmarelo1, INPUT_PULLUP);
+  pinMode(botaoVermelho1, INPUT_PULLUP);
 
-    pinMode(botaoAzul, INPUT_PULLUP);
-    pinMode(botaoAmarelo, INPUT_PULLUP);
-    pinMode(botaoVermelho, INPUT_PULLUP);
+  // Botões jogador 2
+  pinMode(botaoAzul2, INPUT_PULLUP);
+  pinMode(botaoAmarelo2, INPUT_PULLUP);
+  pinMode(botaoVermelho2, INPUT_PULLUP);
 
-    pinMode(ledOK, OUTPUT);
-    pinMode(ledERRO, OUTPUT);
-    digitalWrite(ledOK, HIGH);
-    digitalWrite(ledERRO, HIGH);
-    Serial.begin(9600);
-    digitalWrite(ledOK, LOW);
-    digitalWrite(ledERRO, LOW);
+  // LEDs
+  pinMode(ledOK, OUTPUT);
+  pinMode(ledERRO, OUTPUT);
+  digitalWrite(ledOK, LOW);
+  digitalWrite(ledERRO, LOW);
 
+  // Sorteio da sequência
   randomSeed(analogRead(A0));
-
-    for (int i = 0; i < tamanhoSequencia; i++) {
-    sequencia[i] = random(1, 4);
+  int indice = random(0, 5);
+  for (int i = 0; i < tamanhoSequencia; i++) {
+    sequencia[i] = sequencias[indice][i];
   }
 
-    mostrarSequencia();
+  Serial.println("=== JOGO DA MEMÓRIA COM 2 JOGADORES ===");
+  mostrarSequencia();
+  iniciarJogador(jogadorAtual);
 }
 
 void loop() {
-cont = 1;
-if (posicao < tamanhoSequencia) {
-    int escolha = lerbotao();
-
+  if (esperandoResposta && posicao < tamanhoSequencia) {
+    int escolha = lerBotao(jogadorAtual);
     if (escolha != 0) {
-        resposta[posicao] = escolha;
-        mostrarLED(escolha);
-        posicao++;
-
+      resposta[jogadorAtual][posicao] = escolha;
+      Serial.print("Jogador ");
+      Serial.print(jogadorAtual + 1);
+      Serial.print(" escolheu: ");
+      Serial.println(escolha);
+      posicao++;
+      delay(200); // debounce simples
     }
-}else if (!jacerto) {
-    verificarResposta();
-    jacerto = true;
-    }
-}
-
-int lerbotao() {
-    if (digitalRead(botaoAzul) == LOW){ 
-      return 1;
-    }else if (digitalRead(botaoAmarelo) == LOW){ 
-      return 2;
-    }else if (digitalRead(botaoVermelho) == LOW){ 
-      return 3;
-    }else{
-      return 0;
-    }
-}
-
-void mostrarLED(int led)
-{
-  if (led == 1)
-  {
-    digitalWrite(ledAzul, HIGH);
-  }
-  else if (led == 2)
-  {
-    digitalWrite(ledAmarelo, HIGH);
-  }
-  else if (led == 3)
-  {
-    digitalWrite(ledVermelho, HIGH);
   }
 
-  timer = millis();
+  if (esperandoResposta && posicao == tamanhoSequencia) {
+    tempoFim[jogadorAtual] = millis();
+    esperandoResposta = false;
 
-  if(cont == 0){
-    delay(500);
-    digitalWrite(ledAzul, LOW);
-    digitalWrite(ledAmarelo, LOW);
-    digitalWrite(ledVermelho, LOW);
-    delay(500);
-  }else if(cont == 1){
-    delay(200);
-    digitalWrite(ledAzul, LOW);
-    digitalWrite(ledAmarelo, LOW);
-    digitalWrite(ledVermelho, LOW);
+    verificarResposta(jogadorAtual);
+
+    if (jogadorAtual == 0) {
+      jogadorAtual = 1;
+      delay(1000); // pequena pausa entre jogadores
+      mostrarSequencia();
+      iniciarJogador(jogadorAtual);
+    } else {
+      mostrarVencedor();
+    }
   }
 }
 
-void mostrarSequencia()
-{
-    for (int i = 0; i < tamanhoSequencia; i++)
-    {
-        Serial.print("Mostrando posição: ");
-        Serial.println(i);
-        mostrarLED(sequencia[i]);
-    }
+void mostrarSequencia() {
+  Serial.println("\nMostrando sequência:");
+  for (int i = 0; i < tamanhoSequencia; i++) {
+    Serial.print(i + 1);
+    Serial.print(": ");
+    mostrarCor(sequencia[i]);
+    delay(600); // apenas para facilitar leitura
+  }
+  Serial.println("Agora é a vez do jogador!");
 }
 
-void verificarResposta() {
-    bool acerto = true;
+void mostrarCor(int cor) {
+  if (cor == 1) Serial.println("AZUL");
+  else if (cor == 2) Serial.println("AMARELO");
+  else if (cor == 3) Serial.println("VERMELHO");
+}
 
-    for (int i = 0; i < tamanhoSequencia; i++)
-    {
-        if (resposta[i] != sequencia[i])
-        {
-            acerto = false;
-            break;
-        }
-    }
+void iniciarJogador(int jogador) {
+  Serial.print("\nJogador ");
+  Serial.print(jogador + 1);
+  Serial.println(", sua vez! Aperte os botões na ordem correta:");
+  posicao = 0;
+  esperandoResposta = true;
+  tempoInicio[jogador] = millis();
+}
 
-    if (acerto)
-    {
-        digitalWrite(ledOK, HIGH);
-        Serial.println("Acerto");
+int lerBotao(int jogador) {
+  if (jogador == 0) {
+    if (digitalRead(botaoAzul1) == LOW) return 1;
+    if (digitalRead(botaoAmarelo1) == LOW) return 2;
+    if (digitalRead(botaoVermelho1) == LOW) return 3;
+  } else {
+    if (digitalRead(botaoAzul2) == LOW) return 1;
+    if (digitalRead(botaoAmarelo2) == LOW) return 2;
+    if (digitalRead(botaoVermelho2) == LOW) return 3;
+  }
+  return 0;
+}
+
+void verificarResposta(int jogador) {
+  bool acerto = true;
+  for (int i = 0; i < tamanhoSequencia; i++) {
+    if (resposta[jogador][i] != sequencia[i]) {
+      acerto = false;
+      break;
     }
-    else{
-        digitalWrite(ledERRO, HIGH);
-        Serial.println("Erro");
+  }
+
+  acertou[jogador] = acerto;
+
+  if (acerto) {
+    digitalWrite(ledOK, HIGH);
+    Serial.print("Jogador ");
+    Serial.print(jogador + 1);
+    Serial.println(" acertou a sequência!");
+    delay(1000);
+    digitalWrite(ledOK, LOW);
+  } else {
+    digitalWrite(ledERRO, HIGH);
+    Serial.print("Jogador ");
+    Serial.print(jogador + 1);
+    Serial.println(" errou a sequência!");
+    delay(1000);
+    digitalWrite(ledERRO, LOW);
+  }
+}
+
+void mostrarVencedor() {
+  unsigned long tempo1 = tempoFim[0] - tempoInicio[0];
+  unsigned long tempo2 = tempoFim[1] - tempoInicio[1];
+
+  Serial.println("\n=== RESULTADO FINAL ===");
+
+  Serial.print("Jogador 1 - ");
+  Serial.print(acertou[0] ? "ACERTOU" : "ERROU");
+  Serial.print(" - Tempo: ");
+  Serial.print(tempo1);
+  Serial.println(" ms");
+
+  Serial.print("Jogador 2 - ");
+  Serial.print(acertou[1] ? "ACERTOU" : "ERROU");
+  Serial.print(" - Tempo: ");
+  Serial.print(tempo2);
+  Serial.println(" ms");
+
+  if (acertou[0] && acertou[1]) {
+    if (tempo1 < tempo2) {
+      Serial.println("🏆 Jogador 1 venceu (mais rápido e correto)!");
+    } else if (tempo2 < tempo1) {
+      Serial.println("🏆 Jogador 2 venceu (mais rápido e correto)!");
+    } else {
+      Serial.println("🤝 Empate (ambos acertaram com o mesmo tempo)!");
     }
-} 
+  } else if (acertou[0]) {
+    Serial.println("🏆 Jogador 1 venceu (único que acertou)!");
+  } else if (acertou[1]) {
+    Serial.println("🏆 Jogador 2 venceu (único que acertou)!");
+  } else {
+    Serial.println("❌ Nenhum jogador acertou a sequência.");
+  }
+
+  while (true); // trava o jogo após o resultado
+}
