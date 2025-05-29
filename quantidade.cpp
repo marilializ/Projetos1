@@ -1,17 +1,10 @@
+#include "quantidade.h"
 #include <SoftwareSerial.h>
 #include <Arduino.h>
 
 const int botoes[6] = {2, 3, 4, 5, 6, 7}; // 3 botões por jogador
 
-void setup() {
-  for (int i = 0; i < 6; i++) {
-    pinMode(botoes[i], INPUT_PULLUP);
-  }
 
-  Serial.begin(9600);          // Comunicação com o PC
-  Serial.print("Pressione o botão correto!");
-  randomSeed(analogRead(A0)); 
-}
 
 void rodarRodada() {
   // Sorteia qual áudio tocar e quais botões são os corretos
@@ -84,6 +77,4 @@ void rodarRodada() {
   while (true);  // Fim do jogo
 }
 
-void loop() {
-  rodarRodada();
-}
+
