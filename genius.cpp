@@ -1,10 +1,11 @@
 #include <Arduino.h>
+#include "audio.h"
 #include "genius.h"
 
 int GeniusGame() {
   // Pinos
-  const int botaoAzul1 = 2, botaoAmarelo1 = 3, botaoVermelho1 = 4;
-  const int botaoAzul2 = 5, botaoAmarelo2 = 6, botaoVermelho2 = 7;
+  const int botaoAzul1 = 22, botaoAmarelo1 = 23, botaoVermelho1 = 24;
+  const int botaoAzul2 = 25, botaoAmarelo2 = 26, botaoVermelho2 = 27;
   const int ledOK = 8, ledERRO = 9;
   const int tamanhoSequencia = 5;
 
@@ -36,11 +37,18 @@ int GeniusGame() {
   unsigned long tempoInicio[2];
   unsigned long tempoFim[2];
 
+
+  myDFPlayer.playFolder(4, 7);
+  delay(17000);
+
   // Sorteia sequência
   randomSeed(analogRead(A0));
   int sorteio = random(0, 5);
   for (int i = 0; i < tamanhoSequencia; i++)
     sequencia[i] = sequencias[sorteio][i];
+
+    myDFPlayer.playFolder(4,sorteio + 1);
+    delay(4000);
 
   auto mostrarCor = [](int cor) {
     if (cor == 1) Serial.println("AZUL");
@@ -74,6 +82,7 @@ int GeniusGame() {
 
   // Cada jogador responde
   for (int j = 0; j < 2; j++) {
+    myDFPlayer.playFolder(4, 7+j);
     Serial.print("\nJogador ");
     Serial.print(j + 1);
     Serial.println(" - sua vez!");
@@ -117,12 +126,15 @@ int GeniusGame() {
   Serial.println("\n=== RESULTADO FINAL ===");
   if (!acertou[0] && !acertou[1]) {
     Serial.println("❌ Ninguém acertou.");
+    myDFPlayer.playFolder(4, 10);
     return -1;
   } else if (acertou[0] && !acertou[1]) {
     Serial.println("🏆 Jogador 1 venceu!");
+    myDFPlayer.playFolder(1,2);
     return 1;
   } else if (!acertou[0] && acertou[1]) {
     Serial.println("🏆 Jogador 2 venceu!");
+    myDFPlayer.playFolder(1,4);
     return 2;
   } else {
     unsigned long t1 = tempoFim[0] - tempoInicio[0];

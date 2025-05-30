@@ -1,7 +1,8 @@
 #include "MinigameReacao.h"
+#include "audio.h"
 #include <Arduino.h>
 
-int btn_Pin[6] = {2, 3, 4, 5, 6, 7};
+int btn_Pin[6] = {22,23, 24, 25, 26, 27};
 int btn_random;
 int btnP1;
 int btnP2;
@@ -14,9 +15,14 @@ void setupMinigame() {
   Serial.begin(9600);
 }
 
-void aperte() {
+int aperte() {
+  myDFPlayer.playFolder(2, 4);
+  delay(12500);
+
   btn_random = random(0, 3);
   Serial.println(btn_random + 1);
+
+  myDFPlayer.playFolder(2, btn_random + 1);
 
   while(true) {
     btnP1 = digitalRead(btn_Pin[btn_random]);
@@ -24,11 +30,15 @@ void aperte() {
 
     if(btnP1 == LOW) {
       Serial.println("P1 ganhou");
+      myDFPlayer.playFolder(1, 2);
       return 2;
     }
     if(btnP2 == LOW) {
       Serial.println("P2 ganhou");
+            myDFPlayer.playFolder(1, 4);
       return 1;
     }
   }
 }
+
+
