@@ -2,7 +2,7 @@
 #ifndef MINIGAMEREACAO_H
 #define MINIGAMEREACAO_H
 
-void aperte();
+int aperte();
 void setupMinigame();
 
 #endif
