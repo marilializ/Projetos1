@@ -48,6 +48,6 @@ Como usar
 
     - insira o Microsd no modulo de audio.
 
-5. **Prnto**
+5. **Pronto**
 
     È isso, aperte o butão de reset no arduino e pronto.
