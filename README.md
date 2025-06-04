@@ -1,69 +1,69 @@
 # Trilha Sonora 🎵
 
-**Trilha Sonora** é um jogo competitivo de ritmo rápido para 2 jogadores, que combina percepção auditiva, memória e agilidade. Utilizando **comandos de voz e botões físicos com formas geométricas**, os jogadores enfrentam desafios simultaneamente em uma série de minigames narrados por áudio.
+**Trilha Sonora** is a fast-paced 1v1 competitive game that combines auditory perception, memory, and quick reflexes. Using **voice commands and physical buttons shaped like geometric forms**, players compete simultaneously in a series of audio-narrated minigames.
 
 ---
 
-## 🎮 Como Funciona
+## 🎮 How It Works
 
-- O jogo é iniciado com uma **narração via caixa de som**, explicando o início da partida e as instruções do **primeiro minigame**.
-- Cada jogador possui **3 botões físicos**, representando **formas geométricas**:
-  - **Esquerda:** Círculo (Bola)
-  - **Centro:** Triângulo
-  - **Direita:** Quadrado
-- Os jogadores devem pressionar o botão correspondente à resposta correta, conforme o minigame.
-- O **primeiro jogador a acertar** levanta uma **bandeira no tabuleiro**, ativada por um **servo motor**.
-- O jogo prossegue com novos minigames até que **um jogador acerte 3 vezes**, vencendo a partida.
-- Ao fim de cada minigame, o sistema fornece um **feedback por áudio** indicando se a resposta está correta ou incorreta.
-- Quando o jogo termina, um **áudio final anuncia o vencedor**.
+- The game starts with a **voice narration via speaker**, explaining the start of the match and the rules of the **first minigame**.
+- Each player has **3 physical buttons**, shaped as **geometric forms**:
+  - **Left:** Circle
+  - **Center:** Triangle
+  - **Right:** Square
+- Players must press the button corresponding to the correct answer based on the minigame instructions.
+- The **first player to answer correctly** raises a **flag on the board**, activated by a **servo motor**.
+- The game continues with new minigames until **one player gets 3 correct answers**, winning the match.
+- After each minigame, the system provides **audio feedback** indicating whether the player was correct or not.
+- At the end of the game, an **audio announcement declares the winner**.
 
 ---
 
 ## 🧩 Minigames
 
-O tabuleiro possui **3 minigames diferentes**, sorteados durante a partida:
+The game board includes **3 different minigames**, randomly selected throughout the match:
 
-### 1. 🧮 Contagem
+### 1. 🧮 Counting
 
-- O sistema diz uma sequência de **20 formas geométricas**.
-- Os jogadores devem identificar **qual forma apareceu mais vezes**.
-- Ao término da sequência, os jogadores pressionam o botão correspondente à forma predominante.
+- The system announces a sequence of **20 geometric shapes**.
+- Players must identify **which shape was said the most**.
+- After the sequence ends, players press the button that corresponds to the most frequent shape.
 
-### 2. 🔁 Sequência de Formas
+### 2. 🔁 Shape Sequence
 
-- Funciona como um jogo de **Genius auditivo**.
-- Uma sequência de **5 formas geométricas** é narrada.
-- Os jogadores devem **reproduzir a sequência completa**, pressionando os botões na ordem correta.
+- Works like an **audio-based Simon (Genius) game**.
+- A sequence of **5 shapes** is narrated.
+- Players must **reproduce the entire sequence** by pressing the buttons in the correct order.
 
-### 3. ⚡ Dispara Botão
+### 3. ⚡ Button Dash
 
-- Uma única forma geométrica é narrada.
-- O primeiro jogador a pressionar o **botão correspondente** à forma correta **vence o minigame**.
-
----
-
-## 🧠 Componentes do Jogo
-
-- **Caixa de som**: Narração e feedbacks
-- **6 botões físicos**: 3 por jogador (Círculo, Triângulo e Quadrado)
-- **Servo motor**: Levanta uma bandeira no tabuleiro ao acerto
-- **Sistema de controle**: Lógica de jogo e validação de respostas
+- A **single geometric shape** is announced.
+- The first player to press the **matching button** wins the minigame.
 
 ---
 
-## 🏁 Objetivo
+## 🧠 Game Components
 
-Ser o primeiro jogador a conquistar **3 acertos nos minigames** e vencer a partida!
-
----
-
-## 🔊 Feedbacks de Áudio
-
-- **Início do jogo**
-- **Explicações de cada minigame**
-- **Resultado (acerto ou erro) de cada jogador**
-- **Anúncio final do vencedor**
+- **Speaker**: For narration and feedback
+- **6 physical buttons**: 3 per player (Circle, Triangle, Square)
+- **Servo motor**: Raises a flag on the board when a player scores
+- **Game logic system**: Controls game flow and validates answers
 
 ---
 
-Prepare-se para ouvir, pensar rápido e apertar com precisão! Boa sorte!
+## 🏁 Objective
+
+Be the first player to win **3 minigames** and claim victory!
+
+---
+
+## 🔊 Audio Feedback
+
+- **Game start narration**
+- **Instructions for each minigame**
+- **Correct or incorrect feedback after each minigame**
+- **Final winner announcement**
+
+---
+
+Get ready to listen closely, think fast, and press with precision! Good luck!
