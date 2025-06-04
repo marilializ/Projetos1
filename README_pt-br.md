@@ -1,53 +1,69 @@
-Trilha sonora 
-===
-_Jogo de tabuleiro focado em pessoas com deficiência visual_
+# Trilha Sonora 🎵
 
-Um jogo de tabuleiro desenvolvido para dar a mesma experiências para pessoas com deficiência visual e pessoas sem.
+**Trilha Sonora** é um jogo competitivo de ritmo rápido para 2 jogadores, que combina percepção auditiva, memória e agilidade. Utilizando **comandos de voz e botões físicos com formas geométricas**, os jogadores enfrentam desafios simultaneamente em uma série de minigames narrados por áudio.
 
-Esse repositório contém todos os códigos usados nesse projeto, contendo o código-fonte dos servos quanto os códigos dos minigames.
+---
 
-Circuito
-===
+## 🎮 Como Funciona
 
-Isso pode ser confuso, então faça com calma e lentamente.
+- O jogo é iniciado com uma **narração via caixa de som**, explicando o início da partida e as instruções do **primeiro minigame**.
+- Cada jogador possui **3 botões físicos**, representando **formas geométricas**:
+  - **Esquerda:** Círculo (Bola)
+  - **Centro:** Triângulo
+  - **Direita:** Quadrado
+- Os jogadores devem pressionar o botão correspondente à resposta correta, conforme o minigame.
+- O **primeiro jogador a acertar** levanta uma **bandeira no tabuleiro**, ativada por um **servo motor**.
+- O jogo prossegue com novos minigames até que **um jogador acerte 3 vezes**, vencendo a partida.
+- Ao fim de cada minigame, o sistema fornece um **feedback por áudio** indicando se a resposta está correta ou incorreta.
+- Quando o jogo termina, um **áudio final anuncia o vencedor**.
 
-![Circuito trilha Sonora](extras/Trilha_sonora.png?raw=true "Circuito trilha Sonora")
+---
 
-Você pode usar os arquivos [Fritzing](http://fritzing.org/home/)(_.fzz_) dentro da pasta [extras](https://github.com/marilializ/Projetos1/tree/main/extras) para ver mais de perto ou fazer seu próprio modelo.
+## 🧩 Minigames
 
-Como usar
-===
+O tabuleiro possui **3 minigames diferentes**, sorteados durante a partida:
 
-1. **Instale**
+### 1. 🧮 Contagem
 
-    - Se você ainda não tem, instale o [Arduino IDE](https://www.arduino.cc/en/software/)
-    - Instale os arquivos desse respositório
+- O sistema diz uma sequência de **20 formas geométricas**.
+- Os jogadores devem identificar **qual forma apareceu mais vezes**.
+- Ao término da sequência, os jogadores pressionam o botão correspondente à forma predominante.
 
-2. **Configure**
+### 2. 🔁 Sequência de Formas
 
-     Com o Arduino IDE aberto:
+- Funciona como um jogo de **Genius auditivo**.
+- Uma sequência de **5 formas geométricas** é narrada.
+- Os jogadores devem **reproduzir a sequência completa**, pressionando os botões na ordem correta.
 
-    - Clique em ```File  > Open```;
-    - Procure no seu computador pelos arquivos do projeto;
-    - Abra o ```Geral.ino```
-    - Selecione ```OK```
+### 3. ⚡ Dispara Botão
 
-    Isso vai criar uma nova pasta para o arquivo Geral;
+- Uma única forma geométrica é narrada.
+- O primeiro jogador a pressionar o **botão correspondente** à forma correta **vence o minigame**.
 
-    - Mova os outros arquivos na pasta main para a pasta Geral criada;
+---
 
-3. **Aplique**
+## 🧠 Componentes do Jogo
 
-    Com todas as outras coisas ok, apenas dê upload no código para o Arduino;
+- **Caixa de som**: Narração e feedbacks
+- **6 botões físicos**: 3 por jogador (Círculo, Triângulo e Quadrado)
+- **Servo motor**: Levanta uma bandeira no tabuleiro ao acerto
+- **Sistema de controle**: Lógica de jogo e validação de respostas
 
-4. **Áudio**
+---
 
-    Com um MicroSd com 32gb ou menos, formatado em FAT32:
+## 🏁 Objetivo
 
-    - Pegue todos os arquivos na pasta de audio na main e mova para o Microsd.
+Ser o primeiro jogador a conquistar **3 acertos nos minigames** e vencer a partida!
 
-    - insira o Microsd no módulo de áudio.
+---
 
-5. **Pronto**
+## 🔊 Feedbacks de Áudio
 
-    É isso, aperte o butão de reset no Arduino e pronto.
+- **Início do jogo**
+- **Explicações de cada minigame**
+- **Resultado (acerto ou erro) de cada jogador**
+- **Anúncio final do vencedor**
+
+---
+
+Prepare-se para ouvir, pensar rápido e apertar com precisão! Boa sorte!
