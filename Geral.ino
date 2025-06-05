@@ -67,12 +67,12 @@ while(posicaoJogador1 < 3 and posicaoJogador2 < 3){
   if(posicaoJogador1 == 3){
     myDFPlayer.playFolder(1, 2);
     delay(5500);
-  }else if(posicaoJogador1 == 3){
+    delay(1000000)
+  }else if(posicaoJogador2 == 3){
     myDFPlayer.playFolder(1, 4);
     delay(5500);
+    delay(1000000)
   }
-
-  delay(1000000);
   
 }
 
